@@ -17,19 +17,19 @@
     subtitle: '基于自主移动机器人与多维水质感知的养殖水体空间测绘研究',
     description: 'MIRA 蓝域面向广东、福建等沿海地区的高密度对虾养殖场，解决人工巡塘和固定传感器采样点少、难以及时发现局部低氧及近塘底风险的问题。\n项目拟研发自主巡航的水质测绘机器人，利用 GPS 定位、路径规划与可升降多参数探头，采集表层、中层及近塘底的溶解氧、温度、pH 等数据，生成水质分布图与风险热力图，呈现异常位置、深度及扩散趋势。未来可联动增氧机与智慧养殖平台，形成监测、预警、干预与复测的管理闭环。',
     majors: TRACKS[4].majors, onlineTime: '4月—6月', offlineTime: '7月—8月', bootcamp: '5 Days Intensive Bootcamp',
-    season: '2027–2028', competitionTitle: '康莱德创新挑战', releaseLabel: '课题发布',
+    season: '2027–2028', competitionTitle: '康莱德创新者挑战', releaseLabel: 'TEAM招募',
     imageData: '', imageMode: 'template', imageName: '', imageZoom: 1, imageX: 50, imageY: 50,
     showWatermark: true, softBlend: true, bodySize: 20,
     achievements: [
-      '连续五年\n入围中国区总决选\nFinalist · 获得各类奖项',
-      '连续两年\n晋级全球站总决赛\nChampions',
+      '连续五年\n入围中国区总决选\nFINALIST',
+      '连续两年\n晋级全球站总决赛\nCHAMPIONS',
       '连续多年\n斩获赛道冠军、金银铜奖\n及各单项奖'
     ]
   };
   const clone = obj => JSON.parse(JSON.stringify(obj));
   let state = clone(DEFAULT), activeId = '', db = null, initialized = false;
   let renderGeneration = 0, renderPromise = Promise.resolve(), saveTimer, toastTimer;
-  let lastWarnings = [], zoom = null, exportFormat = 'png', exportScale = 2, busy = false;
+  let lastWarnings = [], zoom = null, exportFormat = 'png', exportScale = 3, busy = false;
   let dialogMode = '', restoreFocus = null, readyExport = null;
   const images = new Map();
   const poster = $('#poster-canvas');
@@ -184,6 +184,7 @@
     ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, WIDTH, HEIGHT);
     const bg = ctx.createLinearGradient(0, 0, WIDTH, HEIGHT); bg.addColorStop(0, '#FFFFFF'); bg.addColorStop(1, p.light);
     ctx.fillStyle = bg; ctx.fillRect(0, 0, WIDTH, HEIGHT);
+    ctx.save(); ctx.translate(0, -30);
     if (visual) {
       if (!s.imageData && s.imageMode === 'template') {
         ctx.drawImage(visual, 0, 0, WIDTH, 1845);
@@ -206,6 +207,14 @@
       ctx.globalAlpha = .2; ctx.drawImage(mark, 430, 860, 220, 220); ctx.globalAlpha = 1;
       text(ctx, '上传项目主视觉', 540, 1116, 19, mix(p.accent, '#FFFFFF', .5), 500, 'center');
     }
+    if (visual) {
+      const fade = ctx.createLinearGradient(0, 1050, 0, 1210);
+      fade.addColorStop(0, '#FFFFFF00');
+      fade.addColorStop(.75, '#FFFFFFDF');
+      fade.addColorStop(1, '#FFFFFF');
+      ctx.fillStyle = fade; ctx.fillRect(0, 1050, WIDTH, HEIGHT - 1050);
+    }
+    ctx.restore();
     drawWaves(ctx, p);
     if (s.showWatermark) {
       ctx.save(); ctx.globalAlpha = t.id === 'water' ? .14 : .065;
@@ -214,24 +223,62 @@
     rr(ctx, 60, 37, 59, 4, 2, p.accent); rr(ctx, 126, 37, 17, 4, 2, mix(p.accent, '#FFFFFF', .4));
     fittedLine(ctx, s.season, 60, 51, 540, 35, p.dark, 750);
     ctx.drawImage(brand, 708.75, 32.92, 312, 73.67);
-    if (!textBlock(ctx, s.competitionTitle, 60, 103, 960, 90, 65, p.dark, 850, 34, 1.2)) warnings.push('赛事主标题过长');
-    font(ctx, 26, 700); const labelWidth = Math.min(320, Math.max(144, ctx.measureText(s.releaseLabel).width + 36));
-    const lg = ctx.createLinearGradient(60, 0, 60 + labelWidth, 0); lg.addColorStop(0, p.mid); lg.addColorStop(1, p.accent);
-    rr(ctx, 60, 198, labelWidth, 40, 4, lg); fittedLine(ctx, s.releaseLabel, 60 + labelWidth / 2, 200, labelWidth - 20, 26, '#FFFFFF', 750, 'center');
-    const cards = s.achievements;
+    if (!textBlock(ctx, s.competitionTitle, 60, 103, 960, 90, 69, p.dark, 850, 34, 1.2)) warnings.push('赛事主标题过长');
+    const cardWidth = Math.max(310, Math.min(648, ctx.measureText(s.competitionTitle).width));
+    const trophy = new Path2D('M5 3 H17 V7 Q17 13 11 15 Q5 13 5 7 Z M5 5 H2 V7 Q2 11 7 11 M17 5 H20 V7 Q20 11 15 11 M11 15 V19 M7 20 H15');
     for (let i = 0; i < 3; i++) {
-      const x = 60 + i * 326, w = 308;
-      rr(ctx, x, 258, w, 112, 9, p.light + 'E8', p.line);
-      const parts = String(cards[i] || '').split('\n');
-      fittedLine(ctx, parts[0] || '', x + 18, 267, w - 36, 24, p.mid, 750);
-      fittedLine(ctx, parts[1] || '', x + 18, 303, w - 36, 19, p.dark, 700);
-      fittedLine(ctx, parts.slice(2).join(' · '), x + 18, 335, w - 36, 14, mix(p.body, '#FFFFFF', .12), 400);
+      const y = 202 + i * 44;
+      rr(ctx, 60, y, cardWidth, 38, 7, p.light + 'E8', p.line);
+      ctx.save(); ctx.translate(72, y + 8); ctx.strokeStyle = p.accent;
+      ctx.lineWidth = 1.6; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke(trophy); ctx.restore();
+      const achievement = String(s.achievements[i] || '').trim().replace(/\s*\n\s*/g, '  ');
+      const lead = achievement.match(/^连续.{2}/u)?.[0] || '';
+      let size = 19;
+      font(ctx, size, 700);
+      while (size > 11 && ctx.measureText(achievement).width > cardWidth - 54) font(ctx, --size, 700);
+      if (ctx.measureText(achievement).width > cardWidth - 54) warnings.push('成绩卡片文字过长');
+      ctx.save(); ctx.beginPath(); ctx.rect(100, y, cardWidth - 52, 38); ctx.clip();
+      text(ctx, lead, 100, y + (38 - size) / 2, size, p.mid, 700);
+      text(ctx, achievement.slice(lead.length), 100 + ctx.measureText(lead).width, y + (38 - size) / 2, size, p.dark, 700);
+      ctx.restore();
     }
-    if (!fittedLine(ctx, `产品孵化时间：${s.offlineTime || '待填写'}`, 1020, 380, 600, 20, p.body, 400, 'right', 13)) warnings.push('孵化时间过长');
-    if (!textBlock(ctx, s.projectName || '你的课题名称', 60, 402, 710, 98, 65, p.dark, 850, 29, 1.25)) warnings.push('课题名称过长，请缩短');
-    text(ctx, '所属赛道', 1020, 418, 14, mix(p.body, '#FFFFFF', .25), 400, 'right');
-    fittedLine(ctx, t.name, 1020, 445, 285, 20, p.dark, 750, 'right');
-    fittedLine(ctx, t.code, 1020, 478, 300, 11.5, p.accent, 750, 'right');
+    function baseline(label, x, y, width, size, color, weight, align = 'left') {
+      font(ctx, size, weight);
+      while (size > 12 && ctx.measureText(label).width > width) { size--; font(ctx, size, weight); }
+      ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = 'alphabetic';
+      ctx.fillText(label, x, y, width);
+      return Math.min(width, ctx.measureText(label).width);
+    }
+    const team = s.projectName || '你的课题名称';
+    const teamX = s.releaseLabel ? 220 : 60;
+    const teamWidth = 790 - teamX;
+    let teamSize = 65, teamLines;
+    do {
+      font(ctx, teamSize, 850);
+      teamLines = wrapText(ctx, team, teamWidth);
+      if (teamLines.length === 1 || (teamSize <= 38 && teamLines.length * teamSize * 1.2 <= 118) || teamSize <= 19) break;
+      teamSize--;
+    } while (true);
+    ctx.textBaseline = 'alphabetic';
+    const metrics = teamLines.map(line => ctx.measureText(line));
+    const bottom = 454;
+    const lastBaseline = bottom - metrics.at(-1).actualBoundingBoxDescent;
+    const firstBaseline = lastBaseline - (teamLines.length - 1) * teamSize * 1.2;
+    const top = firstBaseline - metrics[0].actualBoundingBoxAscent;
+    teamLines.forEach((line, i) => baseline(line, teamX, firstBaseline + i * teamSize * 1.2, teamWidth, teamSize, p.dark, 850));
+    if (s.releaseLabel) {
+      const gradient = ctx.createLinearGradient(60, 0, 205, 0);
+      gradient.addColorStop(0, p.mid); gradient.addColorStop(1, p.accent);
+      rr(ctx, 60, top, 145, bottom - top, 5, gradient);
+      font(ctx, 25, 750);
+      const label = ctx.measureText(s.releaseLabel);
+      ctx.textAlign = 'center'; ctx.fillStyle = '#FFFFFF';
+      ctx.fillText(s.releaseLabel, 132.5, (top + bottom + label.actualBoundingBoxAscent - label.actualBoundingBoxDescent) / 2, 130);
+    }
+    baseline(t.name, 1020, bottom - 20, 220, 20, p.dark, 750, 'right');
+    font(ctx, 11.5, 750);
+    baseline(t.code, 1020, bottom - ctx.measureText(t.code).actualBoundingBoxDescent, 230, 11.5, p.accent, 750, 'right');
+    ctx.save(); ctx.translate(0, -30);
     if (!textBlock(ctx, s.subtitle, 60, 516, 960, 46, 22, p.mid, 750, 16, 1.35)) warnings.push('研究方向过长，请缩短');
     function section(title, y) { rr(ctx, 60, y + 4, 4, 22, 1, p.accent); text(ctx, title, 75, y, 22, p.dark, 750); }
     section('课题介绍', 574);
@@ -248,17 +295,21 @@
       fittedLine(ctx, major.en, x + 14, y + 24, 278, rows > 3 ? 11 : 13.5, mix(p.body, '#FFFFFF', .16), 400, 'left', 8);
     });
     line(ctx, 60, 1388, 1020, 1388, mix(p.accent, '#FFFFFF', .88));
-    section('赛季总体结构与核心时间轴', 1405);
+    section('赛季队伍集训时间轴', 1405);
     text(ctx, 'PROGRAM TIMELINE', 1017, 1411, 14, mix(p.body, '#FFFFFF', .27), 750, 'right');
     line(ctx, 76, 1447, 998, 1447, p.line, 1.2);
-    [76, 590].forEach(x => { ctx.beginPath(); ctx.arc(x, 1447, 3.5, 0, Math.PI * 2); ctx.fillStyle = p.accent; ctx.fill(); });
-    [['01', 80, '线上基础课程', 'Online Foundation', '工程基础 + 商业基础模块', 'Engineering & Business Fundamentals', s.onlineTime], ['02', 594, '线下项目孵化', 'Offline Incubation', '项目调研、设计、开发与测试', s.bootcamp, s.offlineTime]].forEach(([n, x, cn, en, desc, enDesc, when]) => {
+    [76, 464].forEach(x => { ctx.beginPath(); ctx.arc(x, 1447, 3.5, 0, Math.PI * 2); ctx.fillStyle = p.accent; ctx.fill(); });
+    [['01', 80, '线上基础课程', 'Online Foundation', '工程基础 + 商业基础模块', 'Engineering & Business Fundamentals', s.onlineTime], ['02', 468, '线下项目孵化', 'Offline Incubation', '项目调研、设计、开发与测试', s.bootcamp, s.offlineTime]].forEach(([n, x, cn, en, desc, enDesc, when]) => {
       text(ctx, n, x, 1450, 44, p.accent, 800); text(ctx, cn, x + 80, 1456, 22, p.dark, 750);
       text(ctx, en, x + 80, 1486, 18, mix(p.body, '#FFFFFF', .12), 700);
-      fittedLine(ctx, desc, x - 4, 1527, 310, 17, p.body, 400);
-      fittedLine(ctx, enDesc, x - 4, 1557, 416, 13, mix(p.body, '#FFFFFF', .22), 400);
-      if (!fittedLine(ctx, when || '待定', x + 403, 1522, 156, 22, p.accent, 750, 'right', 11)) warnings.push('时间轴日期过长，请使用简短日期');
+      fittedLine(ctx, desc, x - 4, 1552, 294, 17, p.body, 400);
+      baseline(enDesc, x - 4, 1612, 190, 13, mix(p.body, '#FFFFFF', .22), 400);
+      baseline(when || '待定', x + 322, 1612, 130, 26, p.accent, 750, 'right');
     });
+    rr(ctx, 903, 1470, 114, 114, 4, '#FFFFFF', p.line);
+    text(ctx, '二维码', 960, 1518, 14, p.body, 450, 'center');
+    text(ctx, '扫码了解更多', 1017, 1597, 16, p.dark, 650, 'right');
+    ctx.restore();
     line(ctx, 60, 1623, 1020, 1623, p.line);
     if (draft) return warnings;
     return [...new Set(warnings)];
@@ -306,9 +357,9 @@
     const generation = ++renderGeneration, snapshot = clone(state);
     renderPromise = (async () => {
       const temporary = document.createElement('canvas');
-      const warnings = await drawPoster(temporary, snapshot);
+      const warnings = await drawPoster(temporary, snapshot, 2);
       if (generation !== renderGeneration) return;
-      poster.width = WIDTH; poster.height = HEIGHT; poster.getContext('2d').drawImage(temporary, 0, 0);
+      poster.width = temporary.width; poster.height = temporary.height; poster.getContext('2d').drawImage(temporary, 0, 0);
       lastWarnings = warnings;
       $('#description-counter').style.color = warnings.some(x => x.includes('课题介绍')) ? '#D45C50' : '';
       const caption = $('.preview-caption');
@@ -368,6 +419,8 @@
     if (!raw || typeof raw !== 'object') throw new Error('工程文件格式不正确。');
     const value = clone(DEFAULT), limits = { projectName: 40, subtitle: 120, description: 900, majors: 1000, onlineTime: 30, offlineTime: 50, bootcamp: 65, season: 24, competitionTitle: 28, releaseLabel: 12, imageName: 150 };
     for (const [key, limit] of Object.entries(limits)) if (typeof raw[key] === 'string') value[key] = raw[key].slice(0, limit);
+    if (value.competitionTitle === '康莱德创新挑战') value.competitionTitle = DEFAULT.competitionTitle;
+    if (value.releaseLabel === '课题发布') value.releaseLabel = DEFAULT.releaseLabel;
     if (TRACKS.some(t => t.id === raw.track)) value.track = raw.track;
     if (typeof raw.imageData === 'string' && /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+/=\r\n]+$/.test(raw.imageData) && raw.imageData.length < 28_000_000) value.imageData = raw.imageData;
     if (['template', 'upload', 'empty'].includes(raw.imageMode)) value.imageMode = raw.imageMode;
@@ -513,7 +566,7 @@
   }
   function parseInput(raw) {
     if (!raw.trim()) throw new Error('请先粘贴课题资料。');
-    const aliases = { '赛道':'track', '所属赛道':'track', '课题名称':'projectName', '项目名称':'projectName', '课题名':'projectName', '研究方向':'subtitle', '副标题':'subtitle', '课题介绍':'description', '项目介绍':'description', '适配专业':'majors', '推荐专业':'majors', '线上时间':'onlineTime', '线上基础课程':'onlineTime', '线下孵化时间':'offlineTime', '线下时间':'offlineTime', '线下项目孵化':'offlineTime', '产品孵化时间':'offlineTime', '孵化时间':'offlineTime', '赛季':'season' };
+    const aliases = { '赛道':'track', '所属赛道':'track', '课题名称':'projectName', '项目名称':'projectName', '课题名':'projectName', '研究方向':'subtitle', '副标题':'subtitle', '课题介绍':'description', '项目介绍':'description', '适配专业':'majors', '推荐专业':'majors', '线上时间':'onlineTime', '线上基础课程':'onlineTime', '线下孵化时间':'offlineTime', '线下时间':'offlineTime', '线下项目孵化':'offlineTime', '队伍集训时间':'offlineTime', '产品孵化时间':'offlineTime', '孵化时间':'offlineTime', '赛季':'season' };
     const result = {}; let key = '';
     for (const line of raw.replace(/\r/g, '').split('\n')) {
       const match = line.match(/^\s*(?:[-*•]\s*)?([^:：]{2,12})\s*[:：]\s*(.*)$/);
