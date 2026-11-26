@@ -6,6 +6,12 @@
 
 **CONRAD POSTER STUDIO · 2027–2028**
 
+<p>
+  <a href="#制作海报"><img src="https://img.shields.io/badge/TRACKS-05-AD3834?style=for-the-badge&amp;labelColor=25282B" alt="5 个赛道主题"></a>
+  <a href="#导出与交接"><img src="https://img.shields.io/badge/MAX_EXPORT-3240_%C3%97_4950-454B50?style=for-the-badge&amp;labelColor=25282B" alt="最高导出 3240 × 4950 像素"></a>
+  <a href="#导出与交接"><img src="https://img.shields.io/badge/FORMAT-PNG_%2F_PDF-454B50?style=for-the-badge&amp;labelColor=25282B" alt="导出格式 PNG 和 PDF"></a>
+</p>
+
 为康莱德创新者挑战队伍制作中文招募海报。选好赛道，填入课题与集训安排，在浏览器中完成排版和高清导出。
 
 [本地启动](#本地启动)　·　[制作海报](#制作海报)　·　[导出与交接](#导出与交接)
