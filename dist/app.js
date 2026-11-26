@@ -207,14 +207,13 @@
       ctx.globalAlpha = .2; ctx.drawImage(mark, 430, 860, 220, 220); ctx.globalAlpha = 1;
       text(ctx, '上传项目主视觉', 540, 1116, 19, mix(p.accent, '#FFFFFF', .5), 500, 'center');
     }
-    if (visual) {
-      const fade = ctx.createLinearGradient(0, 1050, 0, 1210);
-      fade.addColorStop(0, '#FFFFFF00');
-      fade.addColorStop(.75, '#FFFFFFDF');
-      fade.addColorStop(1, '#FFFFFF');
-      ctx.fillStyle = fade; ctx.fillRect(0, 1050, WIDTH, HEIGHT - 1050);
-    }
     ctx.restore();
+    // Anchor the fade to the poster so the white footer reaches the canvas edge.
+    const fade = ctx.createLinearGradient(0, 1020, 0, 1180);
+    fade.addColorStop(0, '#FFFFFF00');
+    fade.addColorStop(.75, '#FFFFFFDF');
+    fade.addColorStop(1, '#FFFFFF');
+    ctx.fillStyle = fade; ctx.fillRect(0, 1020, WIDTH, HEIGHT - 1020);
     drawWaves(ctx, p);
     if (s.showWatermark) {
       ctx.save(); ctx.globalAlpha = t.id === 'water' ? .14 : .065;

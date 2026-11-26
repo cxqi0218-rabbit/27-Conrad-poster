@@ -20,3 +20,87 @@ dialog{border:1px solid #e5eaf2;border-radius:15px;padding:0;color:var(--ink);wi
 body{height:100dvh;overflow:hidden}.workspace{min-height:0}
 @media(max-width:800px){body{height:auto;overflow:auto}.workspace{min-height:100dvh}}
 .image-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px}.image-actions .text-btn{font-size:.8125rem;white-space:normal;text-align:left;line-height:1.7}#image-zoom-value{min-width:46px}
+
+/* Studio shell */
+:root {
+  --blue: #943a37;
+  --blue-light: #f8edeb;
+  --ink: #202326;
+  --muted: #646a70;
+  --line: #d8dbdc;
+  --bg: #e2e4e4;
+}
+.workspace {
+  background: radial-gradient(ellipse at 83% 0%, #fafbf9, transparent 52%),
+    linear-gradient(125deg, #e9ebe9, #d9dcdd);
+}
+.sidebar {
+  color: #eceeee;
+  background: linear-gradient(150deg, #292d30 0%, #191b1e 55%, #222427);
+  border-right: 1px solid #ffffff18;
+  box-shadow: 5px 0 24px #16181912;
+}
+.brand { color: #fff; }
+.brand small, .nav-caption, .project-item small, .workspace-owner small { color: #acb2b6; }
+.brand-mark { background: linear-gradient(145deg,#ea574c,#ae2824); box-shadow: inset 0 1px 0 #ffffff55; }
+.brand-mark i:nth-child(3) { background: #bd3530; box-shadow: 0 4px 0 #bd3530; }
+.sidebar .new-poster { color: #222426; background: #f2f3f1; border-color: #fff; }
+.sidebar .new-poster:hover { background: #fff; }
+.nav-item { color: #c3c8cb; }
+.nav-item:hover, .nav-item.active { color: white; background: #ffffff13; }
+.nav-item.active { box-shadow: inset 2px 0 #ff695f; }
+.nav-active { background: #ff7067; }
+.nav-count, .project-monogram, .owner-avatar { background: #ffffff13; color: #e2e5e6; }
+.project-item>svg { color: #cfd5d4; }
+.season-card { background: linear-gradient(140deg,#ffffff12,#ffffff03); border-color: #ffffff22; }
+.season-card strong { color: white; font-variant-numeric: tabular-nums; }
+.season-card p, .season-card button, .season-kicker { color: #c1c6c8; }
+.season-orbit { color: #ffffff12; }
+.workspace-owner { border-color: #ffffff20; }
+
+.topbar, .editor-tabs, .preview-toolbar {
+  background: #f9faf8d9;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.topbar { border-color: #afb5b74d; }
+.eyebrow, .eyebrow span, .breadcrumbs, .breadcrumbs strong, .save-status, .page-intro p { color: #565e63; }
+.eyebrow { letter-spacing: .18em; }
+h1 { font-weight: 750; letter-spacing: -.04em; }
+.version-badge { background: #ffffff70; border-color: #bdc2c4; color: #555d62; }
+.btn-primary { background: #25282b; border-color: #25282b; box-shadow: none; }
+.btn-primary:hover { background: #42464a; border-color: #42464a; }
+.export-main.btn-primary { background: #ac342e; border-color: #ac342e; }
+.export-main.btn-primary:hover { background: #932923; }
+.paste-button { color: #41484b; background: #ffffff75; border-color: #c6cacc; }
+.editor-panel, .preview-panel {
+  border-radius: 16px;
+  border-color: #bec3c4;
+  box-shadow: 0 8px 24px #2226290c, inset 0 1px #fff;
+}
+.editor-panel { background: #fcfcfaed; }
+.editor-tabs { gap: 4px; align-items: center; padding-inline: 14px; }
+.tab { justify-content: center; flex: 1; border: 0; border-radius: 7px; min-height: 35px; color: #626a70; }
+.tab.active { background: #34383b; color: white; }
+.form-section { border-color: #dfe2df; }
+.track-option { border-color: #d9dcdc; }
+.track-copy small { color: #626b72; }
+.field input, .field textarea { background: #fff; border-color: #cdd1d0; }
+.preview-panel { background: #34383b; }
+.preview-stage {
+  background: radial-gradient(ellipse at 42% 18%,#5b6062 0%,#414649 46%,#2a2d30 100%);
+  scrollbar-color: #777d7f #303437;
+}
+.poster-wrap { box-shadow: 0 14px 38px #11141665, 0 0 0 1px #13151850; }
+.preview-header { background: #292d30; color: #f4f6f5; border-color: #ffffff20; }
+.preview-header .icon-btn { color: #d4dddf; }
+.preview-header .icon-btn:hover { color: #fff; background: #ffffff18; }
+.preview-toolbar { border-color: #cbd0d0; }
+.preview-caption { background: #e9ecea; color: #535d60; border-color: #d2d6d5; }
+.canvas-dimensions, #zoom-value { font-variant-numeric: tabular-nums; }
+dialog { border-color: #c9ccca; box-shadow: 0 28px 100px #10131445; }
+dialog::backdrop { background: #10141680; backdrop-filter: blur(5px); }
+:focus-visible { outline-color: #b4463e; }
+@media (min-width: 801px) {
+  .topbar { height: 60px; min-height: 60px; }
+}
